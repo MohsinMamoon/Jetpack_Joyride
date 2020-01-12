@@ -13,15 +13,10 @@ class Jety(Object):
     def __init__(self, x, y, board):
         self._shape = self.__shapes[1]
         super().__init__(x, y, board)
+        self._size = (3, 4)
 
     def move(self, x, y, board):
         board.remove(self._shape, self._pos['x'], self._pos['y'])
-        if self.__state == "left":
-            self._shape = self.__shapes[0]
-        elif self.__state == "right":
-            self._shape = self.__shapes[1]
-        elif self.__state == "sheild":
-            self._shape = self.__shapes[2]
         board.place(self._shape, x, y)
         self._pos = {"x": x, "y": y}
 
@@ -47,6 +42,17 @@ class Jety(Object):
 
     def tick(self):
         self.__time = self.__time - 1
+
+    def ch_state(self, state):
+        if state in ["left", "sheild", "right"]:
+            self.__state = state
+            if self.__state == "left":
+                self._shape = self.__shapes[0]
+            elif self.__state == "right":
+                self._shape = self.__shapes[1]
+            elif self.__state == "sheild":
+                self._shape = self.__shapes[2]
+            
 
     def print_stats(self):
         print("\033[u", end="")

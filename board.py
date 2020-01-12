@@ -2,12 +2,14 @@ from time import sleep
 from textures import cloud, broken_wall
 import os
 
-columns = min(200, int(os.popen("stty size", 'r').read().split()[1]))
+columns =int(os.popen("stty size", 'r').read().split()[1])
 
 
 class Board():
 
     def __init__(self, x, y):
+        self.size = (x, y)
+        self.start = 0
         self.__grid = [[' ' for i in range(y)] for j in range(x)]
         # making the ground and sky:
         j = 0
@@ -23,16 +25,19 @@ class Board():
             for j in [0, 1, y-1, y-2]:
                 self.__grid[i][j] = '|'
         # print("\033[s")
-        self.print_board(0)
+        self.print_board()
         sleep(2)
         self.place(broken_wall, x-7, 0)
         self._position = 0
 
-    def print_board(self, start):
+    def print_board(self):
         for i in self.__grid:
-            for j in range(start, start + columns):
+            for j in range(self.start, min(self.size[1], self.start + columns)):
                 print(i[j], end="")
             print("")
+
+    def get_bounds(self):
+        return (self.start, min(self.size[1], self.start + columns))
 
     def place(self, item, x, y):
         __x = x
