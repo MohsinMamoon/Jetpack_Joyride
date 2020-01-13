@@ -1,6 +1,6 @@
 from textures import jety_left, jety_right, jety_sheild
 from object import Object
-
+from time import sleep
 
 class Jety(Object):
 
@@ -9,22 +9,26 @@ class Jety(Object):
     __lives = 3
     __time = 120
     __score = 0
+    gravity = 1
 
     def __init__(self, x, y, board):
+        self._pos = {"x": x, "y": y}
         self._shape = self.__shapes[1]
         super().__init__(x, y, board)
-        self._size = (3, 4)
-
-    def move(self, x, y, board):
-        board.remove(self._shape, self._pos['x'], self._pos['y'])
-        board.place(self._shape, x, y)
-        self._pos = {"x": x, "y": y}
+        self._size = [3, 4]
+        self.add_symbols("jety")
 
     def attack(self):
         print("attacking")
 
-    def die(self):
+    def die(self, board):
+        sleep(1)
         self.__lives = self.__lives - 1
+        if self.__lives < 0:
+            print("GAME OVER: \nYOU LOST ALL YOUR LIVES\n")
+            quit()
+        self.move(23, 9, board)
+        board.update_range(-board.get_size()[1])
 
     def inc_score(self, item="none"):
         add = 0
@@ -42,8 +46,11 @@ class Jety(Object):
 
     def tick(self):
         self.__time = self.__time - 1
+        if self.__time == 0:
+            print("GAME OVER: \nYOU RAN OUT OF TIME\n")
+            quit()
 
-    def ch_state(self, state):
+    def ch_state(self, state=""):
         if state in ["left", "sheild", "right"]:
             self.__state = state
             if self.__state == "left":
@@ -52,7 +59,8 @@ class Jety(Object):
                 self._shape = self.__shapes[1]
             elif self.__state == "sheild":
                 self._shape = self.__shapes[2]
-            
+        elif state == "":
+            return self.__state
 
     def print_stats(self):
         print("\033[u", end="")
