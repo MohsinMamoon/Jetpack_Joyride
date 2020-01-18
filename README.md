@@ -7,7 +7,7 @@
 
 # Jety_Joy
 
-Jety_Joy is a game made in Python3. It is a basic version of Jetpack Joyride by Halfbrick Studios. 
+Jety_Joy is a game made in Python3. It is similar to but a simpler version of Jetpack Joyride by Halfbrick Studios. 
 
 ## Gameplay
 
@@ -23,13 +23,16 @@ The entities encountered in the game are:
 
   ![Jety_sheilded](Screenshot/jety_sheild.png)
   Jety (Sheild)
+
 - ## Firebeams
   ![Firebeam_0](Screenshot/firebeam_0.png)
   ![Firebeam_1](Screenshot/firebeam_1.png)
   ![Firebeam_2](Screenshot/firebeam_2.png)
   ![Firebeam_3](Screenshot/firebeam_3.png)
+
 - ## Magnet
   ![Magnet](Screenshot/magnet.png)
+
 - ## Coins
   ![Coins_0](Screenshot/coins_0.png)
   ![Coins_1](Screenshot/coins_1.png)
@@ -37,16 +40,21 @@ The entities encountered in the game are:
   ![Coins_3](Screenshot/coins_3.png)
   ![Coins_4](Screenshot/coins_4.png)
   ![Coins_5](Screenshot/coins_5.png)
+
 - ## Dragon
   ![Dragon](Screenshot/dragon.png)
+
 - ## Powerup
   ![Powerup](Screenshot/powerup.png)
   
 ## Main Features:
+
 - Whole game is made using ASCII characters
+- The playable area changes according to the size of the terminal
+- Constantly moving screen 
 - Gravity effect shown by the main player and bullets
 - Parabolic path of bullets
-- Sheild to protect the main character
+- Sheild to protect the player
 - Magnets that exert a constant force of attraction on the player
 - Constantly moving background
 - Boss Enemy
@@ -65,7 +73,8 @@ The entities encountered in the game are:
 9. Destroying one firebeam increments score by 10
 10. Destroying one magnet increments score by 15
 11. Killing the dragon increments the score by 100
-## Controls:
+
+## Controls
 
 - 'w': Go Up
 - 'a': Go left
@@ -73,3 +82,8 @@ The entities encountered in the game are:
 - 'space': Activate Sheild
 - 'b': Fire blaster
 - 'q': Quit
+
+## How to run
+
+- (If not installed) Install colorama `pip3 install colorama`
+- Run the game by `python3 run.py`
