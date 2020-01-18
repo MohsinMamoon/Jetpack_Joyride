@@ -1,34 +1,49 @@
 from textures import jety_left, jety_right, jety_sheild
-from object import Object
-from time import sleep
+from person import Person
+from board import PLAYERS, TIMEOUT
 
-class Jety(Object):
+
+class Jety(Person):
 
     __shapes = [jety_left, jety_right, jety_sheild]
-    __state = "right"
-    __lives = 3
-    __time = 120
-    __score = 0
-    gravity = 1
+    _time = 120
+    _score = 0
+    _sheild_time = 5
+    _sheild_timeout = 0
+    _gravity = 1
+    _powerup_time = 5
+
+    @property
+    def name(self):
+        return "jety"
 
     def __init__(self, x, y, board):
-        self._pos = {"x": x, "y": y}
+        self._state = "right"
         self._shape = self.__shapes[1]
         super().__init__(x, y, board)
         self._size = [3, 4]
-        self.add_symbols("jety")
+        PLAYERS.append(self)
 
-    def attack(self):
-        print("attacking")
-
-    def die(self, board):
-        sleep(1)
-        self.__lives = self.__lives - 1
-        if self.__lives < 0:
-            print("GAME OVER: \nYOU LOST ALL YOUR LIVES\n")
+    def tick(self):
+        self._time -= 1
+        if self._time == 0:
+            print("GAME OVER: \nYOU RAN OUT OF TIME\n")
             quit()
-        self.move(23, 9, board)
-        board.update_range(-board.get_size()[1])
+        if self._powerup_time > 0:
+            self._powerup_time -= 1
+            if self._powerup_time == 0:
+                TIMEOUT["Speed"] = 0.2
+
+        if self._sheild_timeout > 0:
+            self._sheild_timeout -= 1
+
+        if self._state == "sheild":
+            if self._sheild_time > 0:
+                self._sheild_time -= 1
+            if self._sheild_time == 0:
+                self._sheild_time = 5
+                self.ch_state("right", 1)
+                self._sheild_timeout = 5
 
     def inc_score(self, item="none"):
         add = 0
@@ -42,27 +57,34 @@ class Jety(Object):
             add = 20
         elif item == "dragon":
             add = 100
-        self.__score = self.__score + add
+        self._score = self._score + add
 
-    def tick(self):
-        self.__time = self.__time - 1
-        if self.__time == 0:
-            print("GAME OVER: \nYOU RAN OUT OF TIME\n")
-            quit()
-
-    def ch_state(self, state=""):
-        if state in ["left", "sheild", "right"]:
-            self.__state = state
-            if self.__state == "left":
+    def ch_state(self, state="", sh_off=0):
+        if state in ["left", "sheild", "right"] and\
+           (self._state != "sheild" or sh_off):
+            if state == "left":
                 self._shape = self.__shapes[0]
-            elif self.__state == "right":
+            elif state == "right":
                 self._shape = self.__shapes[1]
-            elif self.__state == "sheild":
-                self._shape = self.__shapes[2]
+            elif state == "sheild":
+                if self._sheild_timeout == 0:
+                    self._sheild_time = 5
+                    self._shape = self.__shapes[2]
+                else:
+                    return
+            self._state = state
         elif state == "":
-            return self.__state
+            return self._state
 
-    def print_stats(self):
-        print("\033[u", end="")
-        print("Time: " + str(self.__time) + "s\t\t\t\t\t\t\t\t Score: " + str(self.__score) + "\n"\
-              + "\t\t\t\t\t Lives: " + str(self.__lives) + "\n")
+    def gravity(self, status=""):
+        if status == "":
+            return self._gravity
+        else:
+            self._gravity = status
+
+    def powerup(self):
+        self._powerup_time = 5
+        TIMEOUT["Speed"] = 0.1
+
+    def stats(self):
+        return self._time, self._score, self._lives, self._sheild_timeout, self._sheild_time, self._powerup_time

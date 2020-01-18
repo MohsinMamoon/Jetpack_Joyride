@@ -33,10 +33,12 @@ def playermove(board, player, inp=""):
     pl_size = player.get_size()
     brd_range = board.get_bounds()
     brd_size = board.get_size()
-    # print("Current Position: ", prs[0], ", ", prs[1])
 
     if inp == " ":
         player.ch_state("sheild")
+        return
+    elif inp == "b":
+        player.attack(board)
         return
     elif inp == 'd':
         inp = "right"
@@ -54,7 +56,8 @@ def playermove(board, player, inp=""):
             brd_range = board.get_bounds()
     elif inp == 'w':
         inp = "up"
-        player.gravity = 0
+        if player.name == "jety":
+            player.gravity(0)
         nxt[0], nxt[1] = prs[0]-1, prs[1]
     elif inp == 'down':
         nxt[0], nxt[1] = prs[0]+1, prs[1]
@@ -67,38 +70,39 @@ def playermove(board, player, inp=""):
         brd_range[1] = brd_range[1] - 2
     nxt[0] = min(brd_size[0] - 2 - pl_size[0], nxt[0])
     nxt[0] = max(2, nxt[0])
-    nxt[1] = max(9, brd_range[0], nxt[1])
-    nxt[1] = min(nxt[1], brd_range[1] - pl_size[1])
+    if player.name == 'jety':
+        nxt[1] = max(9, brd_range[0], nxt[1])
+        nxt[1] = min(nxt[1], brd_range[1] - pl_size[1])
 
-    # print("New postion: ", nxt[0], ", ", nxt[1])
-    collides, num = board.check_collision(pl_size, nxt, inp, player.ch_state() == "sheild")
+    if player.name == "jety":
+        is_sheild = player.ch_state() == "sheild"
+    else:
+        is_sheild = 1
+    collides, num = board.check_collision(pl_size, nxt, inp, 0)
 
-    if collides == "none":
+    if collides == "none" or collides == "coin" or collides == "po_up":
         __move = 1
 
-    if collides == "coin":
-        __move = 1
         for i in range(num):
-            player.inc_score("coin")
+            if player.name == "jety":
+                player.inc_score("coin")
 
-    if collides == "firebeam":
-        if num:
-            __move = 1
-            player.inc_score("firebeam")
-        else:
+        if collides == "po_up" and player.name == "jety":
+            player.powerup()
+
+    if collides == "dragon" or collides == "firebeam" or collides == "iceball":
+        if not is_sheild:
             player.die(board)
 
-    # if collides == "dragon":
-    #     if not num:
-    #         player.die()
-
-    if collides == "magnet":
-        if num:
-            __move = 1
-            player.inc_score("magnet")
+    if collides == "fireball":
+        if player.name == "dragon":
+            player.die(board)
 
     if __move:
         player.move(nxt[0], nxt[1], board)
+        if nxt == [6, brd_size[1] - 6]:
+            print("GAME OVER:\nYOU WIN\n")
+            quit()
 
 
 def boardmove(board, player):
@@ -109,3 +113,55 @@ def boardmove(board, player):
 
     if pl_pos[1] < brd_range[0]+5:
         playermove(board, player, 'd')
+
+
+def bulletmove(board, player, bullet, gravity=0):
+
+    nxt = [0, 0]
+    prs = bullet.get_pos()
+    brd_range = board.get_bounds()
+    brd_size = board.get_size()
+    if not gravity:
+        if bullet.state == "right":
+            nxt[0], nxt[1] = prs[0], prs[1] + 1
+            if nxt[1] >= brd_range[1] - 3:
+                bullet.die(board)
+                return
+        elif bullet.state == "left":
+            nxt[0], nxt[1] = prs[0], prs[1] - 1
+            if nxt[1] <= brd_range[0]:
+                bullet.die(board)
+                return
+    else:
+        nxt[0], nxt[1] = prs[0] + 1, prs[1]
+        if nxt[0] >= brd_size[0]:
+            bullet.die(board)
+            return
+
+    nxt[0] = min(brd_size[0] - 4, nxt[0])
+    nxt[0] = max(2, nxt[0])
+    nxt[1] = max(2, brd_range[0], nxt[1])
+    nxt[1] = min(nxt[1], brd_range[1] - 3)
+
+    collides, num = board.check_collision(bullet.get_size(), nxt, bullet.state, bullet.name)
+
+    if collides == "none":
+        bullet.move(nxt[0], nxt[1], board)
+
+    elif collides == "firebeam":
+        if bullet.name == "fireball":
+            if player.name == "jety":
+                player.inc_score("firebeam")
+
+    elif collides == "magnet":
+        if bullet.name == "fireball":
+            if player.name == "jety":
+                player.inc_score("magnet")
+
+    elif collides == "dragon":
+        if bullet.name == "fireball":
+            if player.name == "jety":
+                player.inc_score("dragon")
+
+    if collides != "none":
+        bullet.die(board)

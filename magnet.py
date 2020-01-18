@@ -2,6 +2,7 @@ from textures import magnet
 from object import Object
 from board import MAGNETS
 from movement import playermove
+from random import random
 
 
 class Magnet(Object):
@@ -35,3 +36,13 @@ class Magnet(Object):
                     playermove(board, player, 'down')
                 if self._pos["x"] + self._size[0] <= pl_pos[0]:
                     playermove(board, player, 'w')
+
+
+def place_magnet(board):
+
+    for i in range(board.get_size()[0]):
+        for j in range(board.get_size()[1]):
+            k = random() * 100
+            if k < 0.05:
+                if board.fits(magnet, i, j) and i <= 15:
+                    Magnet(i, j, board)

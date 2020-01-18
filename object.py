@@ -1,10 +1,5 @@
-symbs = {
-    'dragon': set(),
-    'coin': set(),
-    'magnet': set(),
-    'firebeam': set(),
-    "jety": set()
-}
+from board import symbs
+from board import FIREBEAMS, MAGNETS, DRAGONS, PLAYERS, BULLETS, POWERUPS
 
 
 class Object():
@@ -24,12 +19,15 @@ class Object():
     def attack(self):
         pass
 
-    def check_collision(self, board, x, y, is_sheild):
+    def check_collision(self, board, x, y):
         for i in range(self._pos["x"], self._pos["x"] + self._size[0]):
             for j in range(self._pos['y'], self._pos['y'] + self._size[1]):
                 if i == x and j == y:
-                    if is_sheild:
-                        board.remove(self._shape, self._pos['x'], self._pos['y'])
+                    self.die(board)
+
+    def die(self, board):
+        board.remove(self._shape, self._pos['x'], self._pos['y'])
+        self.del_from_board()
 
     def get_pos(self):
         return [self._pos['x'], self._pos['y']]
@@ -48,3 +46,10 @@ class Object():
             for j in i:
                 if j != " ":
                     symbs[name].add(j)
+
+    def del_from_board(self):
+        for i in [FIREBEAMS, MAGNETS, BULLETS, DRAGONS, PLAYERS, POWERUPS]:
+            try:
+                i.remove(self)
+            except:
+                pass

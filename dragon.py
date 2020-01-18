@@ -1,19 +1,23 @@
 from textures import dragon
-from object import Object
+from board import DRAGONS
+from person import Person
+from movement import playermove
 
 
-class Dragon(Object):
+class Dragon(Person):
 
     def __init__(self, x, y, board):
-        self._pos = {"x": x, "y": y}
         self._shape = dragon
         super().__init__(x, y, board)
         self._size = [9, 37]
-        self.add_symbols("dragon")
+        DRAGONS.append(self)
 
-    def attack(self):
-        print("attacking")
+    @property
+    def name(self):
+        return "dragon"
 
-    def die(self, board):
-        board.remove(self._shape, self._pos["x"], self._pos["y"])
-        print("Game Over: \nYOU WIN!\n")
+    def follow(self, board, player):
+        if player._pos['x'] > self._pos['x'] + 6:
+            playermove(board, self, 'down')
+        elif player._pos['x'] + 2 < self._pos['x'] + 6:
+            playermove(board, self, 'w')
