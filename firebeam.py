@@ -15,16 +15,11 @@ class Firebeam(Object):
         self._pos = {"x": x, "y": y}
         self._shape = self.__shapes[typ]
         if typ == 0:
-            # self._shape = self.__shapes[0]
             self._size = [1, 6]
         elif typ == 1:
-            # self._shape = self.__shapes[1]
             self._size = [4, 1]
         elif typ == 2 or typ == 3:
-            # self._shape = self.__shapes[2]
             self._size = [4, 4]
-        # elif typ == 3:
-        #     self._size = [4, 4]
         super().__init__(x, y, board)
         self.add_symbols("firebeam")
         FIREBEAMS.append(self)
@@ -46,8 +41,9 @@ class Firebeam(Object):
 
 def place_firebeam(board):
 
-    for i in range(board.get_size()[0]):
-        for j in range(board.get_size()[1]):
+    size = board.get_size()
+    for i in range(size[0]):
+        for j in range(size[1]):
             k = random() * 100
             if k < 0.1:
                 s = random() * 100

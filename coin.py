@@ -22,8 +22,9 @@ class Coins(Object):
 
 def place_coins(board):
 
-    for i in range(board.get_size()[0]):
-        for j in range(board.get_size()[1]):
+    size = board.get_size()
+    for i in range(size[0]):
+        for j in range(size[1]):
             k = random() * 100
             if k < 0.25:
                 s = random() * 100

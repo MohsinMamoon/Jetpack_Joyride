@@ -17,12 +17,12 @@ input("\n\nControls:\n\t'w': Up\n\t'a': Left\n\t'd': Right\n\t'b': Shoot\n\t'spa
 os.system('cls' if os.name == 'nt' else 'clear')
 
 
-brd = Board(28, 300)
+brd = Board(28, 450)
 player = Jety(23, 9, brd)
-dragon = Dragon(10, 260, brd)
+dragon = Dragon(10, 400, brd)
 
 
-brd.print_board(120, 0, 3, -1, 0, 5, 0)
+brd.print_board(180, 0, 3, -1, 0, 10, 0)
 
 place_firebeam(brd)
 place_magnet(brd)
@@ -38,7 +38,7 @@ def printing():
     drag_lives = -1
 
     brd_bnds = brd.get_bounds()
-    if 260 in range(brd_bnds[0], brd_bnds[1]):
+    if 400 in range(brd_bnds[0], brd_bnds[1]):
         drag_lives = dragon._lives
 
     brd.print_board(stats[0], stats[1], stats[2], drag_lives, stats[3], stats[4], stats[5])
@@ -46,17 +46,20 @@ def printing():
 
 def moving():
 
-    for j in BULLETS:
-        bulletmove(brd, player, j)
-    for i in DRAGONS:
-        i.follow(brd, player)
-    playermove(brd, player)
+    for k in range(player.speed):
+        for j in BULLETS:
+            bulletmove(brd, player, j)
+        for i in DRAGONS:
+            i.follow(brd, player)
+        playermove(brd, player)
 
-    if 260 in range(brd.get_bounds()[0], brd.get_bounds()[1]):
+    if 400 in range(brd.get_bounds()[0], brd.get_bounds()[1]):
         TIMEOUT["Attack"] = 1
 
     if time() - TIME["Speed"] >= TIMEOUT["Speed"]:
-        boardmove(brd, player)
+        for k in range(player.speed):
+            boardmove(brd, player)
+            printing()
         TIME["Speed"] = time()
 
 
@@ -73,13 +76,18 @@ def clock():
     if time() - TIME['Time'] >= TIMEOUT["Time"]:
         player.tick()
         TIME['Time'] = time()
+    if time() - TIME['Reset_screen'] >= TIMEOUT['Reset_screen']:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        TIME['Reset_screen'] = time()
 
 
 def gravity():
 
     if player.gravity():
         if time() - TIME['Gravity_jety'] >= TIMEOUT['Gravity_jety']:
-            playermove(brd, player, "down")
+            for i in range(player.grav_const()):
+                playermove(brd, player, "down")
+                printing()
             TIME['Gravity_jety'] = time()
     else:
         player.gravity(1)
@@ -93,7 +101,6 @@ def gravity():
 def drag_attack():
 
     if time() - TIME['Attack'] >= random() + TIMEOUT["Attack"]:
-        os.system('cls' if os.name == 'nt' else 'clear')
         for i in DRAGONS:
             i.attack(brd)
         TIME['Attack'] = time()
@@ -101,13 +108,13 @@ def drag_attack():
 
 while 1:
 
+    clock()
+
     printing()
 
     moving()
 
     magnet_action()
-
-    clock()
 
     gravity()
 

@@ -3,7 +3,8 @@
   - [Gameplay](#gameplay)
   - [Main Features:](#main-features)
   - [Rules](#rules)
-  - [Controls:](#controls)
+  - [Controls](#controls)
+  - [How to run](#how-to-run)
 
 # Jety_Joy
 
@@ -63,7 +64,7 @@ The entities encountered in the game are:
 ## Rules
 
 1. The player will have 3 lives
-2. The player will have a total of 1200s to complete the game
+2. The player will have a total of 180s to complete the game
 3. The dragon will have 3 lives
 4. The shield can be activated for 10s with a cooldown period of 60s
 5. Powerup will speed up the game for 10s

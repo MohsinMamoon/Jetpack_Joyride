@@ -40,8 +40,9 @@ class Magnet(Object):
 
 def place_magnet(board):
 
-    for i in range(board.get_size()[0]):
-        for j in range(board.get_size()[1]):
+    size = board.get_size()
+    for i in range(size[0]):
+        for j in range(size[1]):
             k = random() * 100
             if k < 0.05:
                 if board.fits(magnet, i, j) and i <= 15:

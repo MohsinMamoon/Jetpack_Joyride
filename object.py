@@ -7,6 +7,15 @@ class Object():
     _shape = []
     _pos = {"x": -1, "y": -1}
     _size = [0, 0]
+    _grav_const = 1
+
+    def grav_const(self, change=''):
+        if change == '':
+            return int(self._grav_const)
+        elif change == 'reset':
+            self._grav_const = 1
+        else:
+            self._grav_const += change
 
     def __init__(self, x, y, board):
         board.place(self._shape, x, y)

@@ -1,17 +1,17 @@
 from textures import jety_left, jety_right, jety_sheild
 from person import Person
-from board import PLAYERS, TIMEOUT
+from board import PLAYERS
 
 
 class Jety(Person):
 
     __shapes = [jety_left, jety_right, jety_sheild]
-    _time = 120
+    _time = 180
     _score = 0
-    _sheild_time = 5
+    _sheild_time = 10
     _sheild_timeout = 0
+    _powerup_time = 10
     _gravity = 1
-    _powerup_time = 5
 
     @property
     def name(self):
@@ -32,7 +32,7 @@ class Jety(Person):
         if self._powerup_time > 0:
             self._powerup_time -= 1
             if self._powerup_time == 0:
-                TIMEOUT["Speed"] = 0.2
+                self._speed = 1
 
         if self._sheild_timeout > 0:
             self._sheild_timeout -= 1
@@ -41,9 +41,9 @@ class Jety(Person):
             if self._sheild_time > 0:
                 self._sheild_time -= 1
             if self._sheild_time == 0:
-                self._sheild_time = 5
+                self._sheild_time = 10
                 self.ch_state("right", 1)
-                self._sheild_timeout = 5
+                self._sheild_timeout = 60
 
     def inc_score(self, item="none"):
         add = 0
@@ -68,7 +68,7 @@ class Jety(Person):
                 self._shape = self.__shapes[1]
             elif state == "sheild":
                 if self._sheild_timeout == 0:
-                    self._sheild_time = 5
+                    self._sheild_time = 10
                     self._shape = self.__shapes[2]
                 else:
                     return
@@ -81,10 +81,11 @@ class Jety(Person):
             return self._gravity
         else:
             self._gravity = status
+            self.grav_const('reset')
 
     def powerup(self):
-        self._powerup_time = 5
-        TIMEOUT["Speed"] = 0.1
+        self._powerup_time = 10
+        self._speed = 2
 
     def stats(self):
         return self._time, self._score, self._lives, self._sheild_timeout, self._sheild_time, self._powerup_time

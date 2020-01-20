@@ -35,7 +35,8 @@ TIMEOUT = {
     "Gravity_jety": 0.005,
     "Gravity_bullets": 0.5,
     "Magnet": 0.05,
-    "Attack": 5
+    "Attack": 5,
+    "Reset_screen": 5
 }
 
 TIME = {}
@@ -64,7 +65,7 @@ class Board():
                 self.__grid[i][j] = Fore.RED + '|'
 
         print("\033[s")
-        self.print_board(120, 0, 3, -1, 0, 5, 0)
+        self.print_board(180, 0, 3, -1, 0, 10, 0)
         sleep(2)
         self.place(broken_wall, x-7, 0)
         self._position = 0
@@ -123,7 +124,7 @@ class Board():
         for i in item:
             for j in i:
                 try:
-                    if ((self.__grid[__x][__y] != ' ') or (__x < 2) or (__y >= 260) or (__x >= self.__size[0]-2)):
+                    if ((self.__grid[__x][__y] != ' ') or (__x < 2) or (__y >= 400) or (__x >= self.__size[0]-2)):
                         return 0
                 except:
                     return 0
@@ -143,7 +144,6 @@ class Board():
         new_start = max(0, new_start)
         if new_start + columns > self.__size[1]:
             new_start = self.__size[1] - columns
-        # print("Updating range to: ", new_start)
 
         x = self.__size[0]
         y = self.__start

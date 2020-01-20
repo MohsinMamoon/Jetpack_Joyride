@@ -9,6 +9,11 @@ class Person(Object):
 
     _state = "left"
     _lives = 3
+    _speed = 1
+
+    @property
+    def speed(self):
+        return self._speed
 
     def __init__(self, x, y, board):
         self._pos = {"x": x, "y": y}
