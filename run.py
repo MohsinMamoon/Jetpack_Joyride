@@ -46,18 +46,20 @@ def printing():
 
 def moving():
 
-    for k in range(player.speed):
-        for j in BULLETS:
-            bulletmove(brd, player, j)
-        for i in DRAGONS:
-            i.follow(brd, player)
-        playermove(brd, player)
+    for j in BULLETS:
+        bulletmove(brd, player, j)
+    for i in DRAGONS:
+        i.follow(brd, player)
+    playermove(brd, player)
 
     if 400 in range(brd.get_bounds()[0], brd.get_bounds()[1]):
         TIMEOUT["Attack"] = 1
 
     if time() - TIME["Speed"] >= TIMEOUT["Speed"]:
-        for k in range(player.speed):
+        speed = 1
+        if player.speed > 1:
+            speed = 3
+        for k in range(speed):
             boardmove(brd, player)
             printing()
         TIME["Speed"] = time()

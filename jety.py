@@ -85,7 +85,7 @@ class Jety(Person):
 
     def powerup(self):
         self._powerup_time = 10
-        self._speed = 2
+        self._speed = 6
 
     def stats(self):
         return self._time, self._score, self._lives, self._sheild_timeout, self._sheild_time, self._powerup_time
