@@ -118,6 +118,7 @@ def playermove(board, player, inp=""):
             if player.name == "jety" and inp == "down":
                 player.gravity(0)
         inp = save
+    return __move
 
 
 def boardmove(board, player):
@@ -127,7 +128,8 @@ def boardmove(board, player):
     brd_range = board.get_bounds()
 
     if pl_pos[1] < brd_range[0]+5:
-        playermove(board, player, 'd')
+        if not playermove(board, player, 'd'):
+            board.update_range(-1)
 
 
 def bulletmove(board, player, bullet, gravity=0):
