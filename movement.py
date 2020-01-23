@@ -10,7 +10,7 @@ def playermove(board, player, inp=""):
 
         raise AlarmException
 
-    def user_input(timeout=0.15):
+    def user_input(timeout=0.03):
 
         signal.signal(signal.SIGALRM, alarmhandler)
         signal.setitimer(signal.ITIMER_REAL, timeout)
